@@ -6,6 +6,7 @@ import com.ninaorganization.entity.enums.EventType;
 import com.ninaorganization.repository.EventRepository;
 import com.ninaorganization.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import java.util.List;
 @Component
 @Order(4)
 @RequiredArgsConstructor
+@Slf4j
 public class ParticipateCatalogSeed implements CommandLineRunner {
 
     private final EventRepository eventRepository;
@@ -23,10 +25,15 @@ public class ParticipateCatalogSeed implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (eventRepository.count() >= 15) return;
-        User hr = userRepository.findByEmail("hr@nina.com").orElse(null);
-        if (hr == null) return;
-        catalog(hr).forEach(eventRepository::save);
+        try {
+            if (eventRepository.count() >= 15) return;
+            User hr = userRepository.findByEmail("hr@nina.com").orElse(null);
+            if (hr == null) return;
+            catalog(hr).forEach(eventRepository::save);
+            log.info("Event catalog seed complete");
+        } catch (Exception e) {
+            log.warn("Event seed skipped: {}", e.getMessage());
+        }
     }
 
     private List<Event> catalog(User hr) {

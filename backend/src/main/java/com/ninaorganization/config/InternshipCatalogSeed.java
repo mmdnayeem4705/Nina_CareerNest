@@ -7,6 +7,7 @@ import com.ninaorganization.entity.enums.WorkMode;
 import com.ninaorganization.repository.InternshipRepository;
 import com.ninaorganization.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.util.List;
 @Component
 @Order(2)
 @RequiredArgsConstructor
+@Slf4j
 public class InternshipCatalogSeed implements CommandLineRunner {
 
     private final InternshipRepository internshipRepository;
@@ -26,10 +28,15 @@ public class InternshipCatalogSeed implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (internshipRepository.count() >= 20) return;
-        User hr = userRepository.findByEmail("hr@nina.com").orElse(null);
-        if (hr == null) return;
-        catalog(hr).forEach(internshipRepository::save);
+        try {
+            if (internshipRepository.count() >= 20) return;
+            User hr = userRepository.findByEmail("hr@nina.com").orElse(null);
+            if (hr == null) return;
+            catalog(hr).forEach(internshipRepository::save);
+            log.info("Internship catalog seed complete");
+        } catch (Exception e) {
+            log.warn("Internship seed skipped: {}", e.getMessage());
+        }
     }
 
     private List<Internship> catalog(User hr) {

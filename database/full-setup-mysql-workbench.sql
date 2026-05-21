@@ -80,7 +80,7 @@ CREATE TABLE internships (
     duration VARCHAR(100),
     stipend DECIMAL(19,2),
     stipend_label VARCHAR(100),
-    virtual TINYINT(1) NOT NULL DEFAULT 0,
+    is_virtual TINYINT(1) NOT NULL DEFAULT 0,
     certificate_provided TINYINT(1) NOT NULL DEFAULT 1,
     small_project TINYINT(1) NOT NULL DEFAULT 0,
     featured TINYINT(1) NOT NULL DEFAULT 0,

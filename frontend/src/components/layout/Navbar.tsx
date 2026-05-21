@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/authStore'
 import { useThemeStore } from '@/store/themeStore'
 import { Button } from '@/components/ui/Button'
+import { AccountDropdown } from '@/components/layout/AccountDropdown'
 import { Briefcase, Moon, Sun, Menu, X } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
@@ -15,14 +16,11 @@ const seekerLinks = [
 ]
 
 export function Navbar() {
-  const { isAuthenticated, role, logout, firstName } = useAuthStore()
+  const { isAuthenticated, role } = useAuthStore()
   const { dark, toggle } = useThemeStore()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const authed = isAuthenticated()
-
-  const dashboardPath =
-    role === 'ROLE_ADMIN' ? '/admin' : role === 'ROLE_HR' ? '/hr' : '/tracker'
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-lg">
@@ -46,13 +44,7 @@ export function Navbar() {
             {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
           {authed ? (
-            <>
-              <span className="hidden sm:inline text-sm text-slate-600 dark:text-slate-400">
-                Hi, {firstName || 'User'}
-              </span>
-              <Button size="sm" onClick={() => navigate(dashboardPath)}>Dashboard</Button>
-              <Button size="sm" variant="outline" onClick={() => { logout(); navigate('/') }}>Logout</Button>
-            </>
+            <AccountDropdown />
           ) : (
             <>
               <Button size="sm" variant="ghost" onClick={() => navigate('/login')}>Login</Button>

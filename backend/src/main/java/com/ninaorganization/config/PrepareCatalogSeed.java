@@ -4,6 +4,7 @@ import com.ninaorganization.entity.Course;
 import com.ninaorganization.entity.enums.CourseCategory;
 import com.ninaorganization.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -13,14 +14,20 @@ import java.util.List;
 @Component
 @Order(3)
 @RequiredArgsConstructor
+@Slf4j
 public class PrepareCatalogSeed implements CommandLineRunner {
 
     private final CourseRepository courseRepository;
 
     @Override
     public void run(String... args) {
-        if (courseRepository.count() >= 15) return;
-        catalog().forEach(courseRepository::save);
+        try {
+            if (courseRepository.count() >= 15) return;
+            catalog().forEach(courseRepository::save);
+            log.info("Course catalog seed complete");
+        } catch (Exception e) {
+            log.warn("Course seed skipped: {}", e.getMessage());
+        }
     }
 
     private List<Course> catalog() {

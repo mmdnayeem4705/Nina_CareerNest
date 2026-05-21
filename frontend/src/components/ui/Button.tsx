@@ -4,10 +4,11 @@ import { ButtonHTMLAttributes, forwardRef } from 'react'
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
   size?: 'sm' | 'md' | 'lg'
+  loading?: boolean
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', ...props }, ref) => {
+  ({ className, variant = 'primary', size = 'md', loading = false, disabled, ...props }, ref) => {
     const variants = {
       primary: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/25',
       secondary: 'bg-cyan-600 hover:bg-cyan-700 text-white',
@@ -25,6 +26,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           sizes[size],
           className
         )}
+        disabled={disabled || loading}
+        aria-busy={loading}
         {...props}
       />
     )

@@ -388,11 +388,16 @@ npm run dev
 # 3️⃣ Backend Setup
 
 ```bash
-cd backend
-mvn clean install
-mvn spring-boot:run
-```
+Option A — recommended (stops old process first):
 
+cd "c:\Users\SINGAPORE\Downloads\Nina Organization\backend"
+.\start.ps1
+Option B — manual:
+
+
+cd "c:\Users\SINGAPORE\Downloads\Nina Organization\backend"
+.\stop.ps1
+.\run.ps1 spring-boot:run
 ---
 
 # 4️⃣ Database Setup

@@ -39,6 +39,7 @@ public class Internship {
     private String stipendLabel;
 
     @Builder.Default
+    @Column(name = "is_virtual")
     private boolean virtual = false;
 
     @Builder.Default

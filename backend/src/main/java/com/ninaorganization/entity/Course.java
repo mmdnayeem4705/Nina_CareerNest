@@ -27,6 +27,7 @@ public class Course {
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(50)")
     private CourseCategory category;
 
     private String videoUrl;
