@@ -24,10 +24,10 @@ public class SupabaseStorageService {
 
     public String uploadFile(MultipartFile file, String bucket, String objectPath) throws IOException, InterruptedException {
         if (supabaseUrl == null || supabaseUrl.isBlank()) {
-            throw new IllegalStateException("Supabase URL is not configured")
+            throw new IllegalStateException("Supabase URL is not configured");
         }
         if (serviceRoleKey == null || serviceRoleKey.isBlank()) {
-            throw new IllegalStateException("Supabase service role key is not configured")
+            throw new IllegalStateException("Supabase service role key is not configured");
         }
 
         var client = HttpClient.newHttpClient();
@@ -52,7 +52,7 @@ public class SupabaseStorageService {
         String extension = ""
                 + (originalFilename != null && originalFilename.contains(".")
                 ? originalFilename.substring(originalFilename.lastIndexOf('.')).toLowerCase(Locale.ROOT)
-                : "")
+                : "");
         String timestamp = String.valueOf(Instant.now().toEpochMilli());
         return String.format("profiles/%d/%s-%s%s", userId, kind, timestamp, extension);
     }

@@ -14,9 +14,9 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
-    private final UserRepository userRepository;
-    private final JobRepository jobRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository = null;
+    private final JobRepository jobRepository = null;
+    private final PasswordEncoder passwordEncoder = null;
 
     @Override
     public void run(String... args) {
