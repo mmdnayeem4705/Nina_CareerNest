@@ -264,104 +264,21 @@ Integrated with:
 
 ---
 
-# 📊 Analytics & Monitoring
 
-## 🐞 Sentry
 
-Tracks:
-
-* Backend Exceptions
-* Frontend Crashes
-* API Failures
-* Error Logs
-
-## 📈 PostHog
-
-Tracks:
-
-* User Activity
-* Feature Usage
-* Engagement Metrics
-* Dashboard Analytics
 
 ---
 
-# 🧠 Advanced Features
-
-## Planned Features
-
-* 🤖 AI Resume Analyzer
-* 📄 ATS Resume Checker
-* 🎯 AI Job Recommendation
-* 💻 Online Coding Compiler
-* 🏅 Certificate Generation
-* 📈 Leaderboards
-* 📝 Resume Builder
-
+Demo logins (after backend starts)
+Email	          Password
+seeker@nina.com   seeker123
+hr@nina.com       hr123456
+admin@nina.com    admin123
 ---
 
-# 🧪 API Testing Using Postman
 
-## Postman Features
-
-* 🔐 Authentication API Testing
-* 📬 CRUD API Testing
-* 🧪 Request Collections
-* 🌍 Environment Variables
-* 📊 API Validation
-
-## Sample APIs
-
-```http
-POST /api/auth/register
-POST /api/auth/login
-GET /api/jobs
-POST /api/jobs/apply
-GET /api/applications/status
-```
 
 ---
-
-# 🎭 Frontend Testing Using Playwright
-
-## Playwright Testing Includes
-
-* ✅ Login Testing
-* ✅ Registration Testing
-* ✅ Protected Route Testing
-* ✅ Dashboard Navigation
-* ✅ Job Application Workflow
-* ✅ Responsive UI Testing
-
----
-
-# 🎨 UI/UX Features
-
-* 🌙 Dark/Light Mode
-* 📱 Fully Responsive Design
-* ✨ Smooth Animations
-* 📊 Dashboard Charts
-* 📋 Interactive Tables
-* 🧩 Reusable Components
-* 🚀 Professional Enterprise UI
-
----
-
-# 🚀 Deployment
-
-## Frontend
-
-* ▲ Vercel
-
-## Backend
-
-* 🚂 Railway
-  OR
-* 🌐 Render
-
-## Database
-
-* 🐬 MySQL
 
 ---
 
@@ -440,16 +357,7 @@ SENTRY_DSN=your_sentry_dsn
 POSTHOG_API_KEY=your_posthog_key
 ```
 
----
-
-# 📈 Future Enhancements
-
-* 🌍 Multi-language Support
-* 🤖 AI Interview Assistant
-* 🎥 Video Interview System
-* 📞 Real-Time Chat
-* 📊 Advanced Analytics
-* 📱 Mobile Application
+-
 
 ---
 
@@ -466,38 +374,4 @@ POSTHOG_API_KEY=your_posthog_key
 
 ---
 
-# 🤝 Contributors
 
-Developed by:
-👨‍💻 Mulla Mohammed Nayeem
-
----
-
-# 📜 License
-
-This project is licensed under the MIT License.
-
----
-
-# 🌟 Inspiration
-
-Inspired by platforms like:
-
-* 💼 LinkedIn Jobs
-* 🧑‍💼 Naukri
-* 🎓 Internshala
-* 🏆 HackerRank
-* 💻 LeetCode
-* 🏢 Enterprise Internal Hiring Systems
-
----
-
-Demo logins (after backend starts)
-Email	          Password
-seeker@nina.com   seeker123
-hr@nina.com       hr123456
-admin@nina.com    admin123
-
-# ❤️ Nina Organization
-
-Building the future recruitment ecosystem with innovation, scalability, and modern technology 🚀
