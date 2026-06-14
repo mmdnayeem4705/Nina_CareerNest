@@ -151,59 +151,6 @@ ROLE_HR
 ROLE_ADMIN
 ```
 
----
-
-# 📁 Project Structure
-
-# 📦 Frontend Structure
-
-```text
-frontend/
-│
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── context/
-│   ├── dashboard/
-│   ├── hooks/
-│   ├── layouts/
-│   ├── pages/
-│   ├── routes/
-│   ├── services/
-│   ├── store/
-│   ├── styles/
-│   └── utils/
-│
-├── public/
-├── package.json
-└── vite.config.ts
-```
-
----
-
-# 📦 Backend Structure
-
-```text
-backend/
-│
-├── src/main/java/com/ninaorganization/
-│
-├── config/
-├── controller/
-├── dto/
-├── entity/
-├── exception/
-├── repository/
-├── security/
-├── service/
-├── serviceImpl/
-├── utils/
-│
-├── resources/
-│   ├── application.properties
-│
-└── pom.xml
-```
 
 ---
 
