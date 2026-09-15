@@ -18,11 +18,15 @@ class CompanyMeView(APIView):
     def get(self, request):
         if request.user.role != "recruiter":
             return Response({"detail": "Not a recruiter."}, status=status.HTTP_400_BAD_REQUEST)
-        company, _ = Company.objects.get_or_create(owner=request.user, defaults={"name": f"{request.user.first_name or 'My'} Company"})
+        company = Company.objects.filter(owner=request.user).order_by("id").first()
+        if not company:
+            company = Company.objects.create(owner=request.user, name=f"{request.user.first_name or 'My'} Company")
         return Response(CompanySerializer(company).data)
 
     def patch(self, request):
-        company, _ = Company.objects.get_or_create(owner=request.user, defaults={"name": "My Company"})
+        company = Company.objects.filter(owner=request.user).order_by("id").first()
+        if not company:
+            company = Company.objects.create(owner=request.user, name="My Company")
         serializer = CompanySerializer(company, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()

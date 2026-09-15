@@ -21,6 +21,11 @@ class IsRecruiter(BasePermission):
         return request.user.is_authenticated and request.user.role == "recruiter" and not request.user.is_blocked
 
 
+class IsStaffRole(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role in ("recruiter", "admin") and not request.user.is_blocked
+
+
 class IsAdminRole(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == "admin" and not request.user.is_blocked

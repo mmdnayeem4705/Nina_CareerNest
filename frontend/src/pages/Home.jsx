@@ -1,50 +1,53 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { api } from "../api";
 
 export default function Home() {
+  const [openRoles, setOpenRoles] = useState("...");
+
+  useEffect(() => {
+    api.get("/api/jobs/").then((data) => setOpenRoles(data.count ?? data.length)).catch(() => setOpenRoles("many"));
+  }, []);
+
   return (
     <div className="wrap">
       <section className="hero">
         <div>
-          <div className="kicker">Nina Organization</div>
-          <h1>Hiring that reads the resume, not just the form.</h1>
+          <div className="kicker">Nina Organization · Careers</div>
+          <h2>Do meaningful work with a team building what is next.</h2>
           <p className="lede">
-            A candidate marketplace and recruiter desk in one place. Upload a resume, extract skills, and see a live match
-            score against every role.
+            Explore opportunities at NINA, a private organization where curious people solve real problems, learn quickly,
+            and make an impact that reaches beyond their job title.
           </p>
           <div className="row" style={{ marginTop: 22 }}>
             <Link className="btn copper" to="/register">
               Create an account
             </Link>
-            <Link className="btn ghost" to="/jobs">
-              Browse open roles
+            <Link className="btn ghost" to="/internships">
+              Explore internships
             </Link>
           </div>
         </div>
         <div className="hero-card">
-          <div className="kicker">Match engine</div>
-          <div>Python Developer · required Python, Django, PostgreSQL, Docker</div>
-          <div className="chips">
-            <span className="chip ok">Python</span>
-            <span className="chip ok">Django</span>
-            <span className="chip miss">Docker</span>
-            <span className="chip ok">PostgreSQL</span>
-          </div>
-          <div className="score">75%</div>
-          <p className="muted">Simple skill matching first. NLP can be layered later without changing the product surface.</p>
+          <div className="kicker hero-card-kicker">Inside NINA</div>
+          <div className="hero-card-title">A workplace with room to grow.</div>
+          
+          <div className="score">{openRoles} <span>open roles</span></div>
+          <p className="muted">Full-time roles, remote opportunities, and internships are refreshed as teams grow.</p>
         </div>
       </section>
       <div className="cards" style={{ marginTop: 36 }}>
         <article className="card">
-          <h3>Candidates</h3>
-          <p className="muted">Profiles, resume parse, saved jobs, application tracking, and notifications.</p>
+          <h3>Build your path</h3>
+          <p className="muted">Create a profile, discover opportunities, and follow every application from one place.</p>
         </article>
         <article className="card">
-          <h3>Recruiters</h3>
-          <p className="muted">Company pages, job posts, ranked applicants, status changes, resume download, interviews.</p>
+          <h3>Work with purpose</h3>
+          <p className="muted">Join teams that value ownership, clear thinking, and progress over performative process.</p>
         </article>
         <article className="card">
-          <h3>Admins</h3>
-          <p className="muted">Users, companies, jobs, block/unblock, and hiring statistics on one desk.</p>
+          <h3>Start early</h3>
+          <p className="muted">Our internship opportunities pair real responsibility with support from experienced teammates.</p>
         </article>
       </div>
     </div>

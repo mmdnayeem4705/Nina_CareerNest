@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "./auth";
-import { AppShell, Topbar } from "./components/Shell";
+import { AppShell, Footer, Topbar } from "./components/Shell";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -10,8 +10,9 @@ import Profile from "./pages/Profile";
 import Applications from "./pages/Applications";
 import Saved from "./pages/Saved";
 import Notifications from "./pages/Notifications";
+import Preparation from "./pages/Preparation";
 import { CompanyPage, NewJob, RecruiterHome, RecruiterJob } from "./pages/Recruiter";
-import { AdminHome, AdminJobs, AdminUsers } from "./pages/Admin";
+import { AdminApplications, AdminHome, AdminJobs, AdminUsers } from "./pages/Admin";
 
 function Guard({ roles, children }) {
   const { user, ready } = useAuth();
@@ -28,6 +29,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/jobs" element={<Jobs />} />
+        <Route path="/internships" element={<Jobs initialJobType="internship" title="Internships at NINA" description="Start your career with practical work, thoughtful mentorship, and a team that invests in your growth." />} />
         <Route path="/jobs/:id" element={<JobDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -59,6 +61,22 @@ function AppRoutes() {
             element={
               <Guard roles={["candidate"]}>
                 <Saved />
+              </Guard>
+            }
+          />
+          <Route
+            path="/preparation"
+            element={
+              <Guard roles={["candidate"]}>
+                <Preparation />
+              </Guard>
+            }
+          />
+          <Route
+            path="/j"
+            element={
+              <Guard roles={["candidate"]}>
+                <Preparation />
               </Guard>
             }
           />
@@ -104,6 +122,14 @@ function AppRoutes() {
             }
           />
           <Route
+            path="/admin/applications"
+            element={
+              <Guard roles={["admin"]}>
+                <AdminApplications />
+              </Guard>
+            }
+          />
+          <Route
             path="/admin/users"
             element={
               <Guard roles={["admin"]}>
@@ -121,6 +147,7 @@ function AppRoutes() {
           />
         </Route>
       </Routes>
+      <Footer />
     </>
   );
 }

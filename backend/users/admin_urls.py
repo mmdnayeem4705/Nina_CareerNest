@@ -2,6 +2,7 @@ from django.urls import path
 
 from .admin_views import (
     AdminCompanyListView,
+    AdminApplicationListView,
     AdminJobListView,
     AdminJobToggleView,
     AdminStatsView,
@@ -16,4 +17,5 @@ urlpatterns = [
     path("companies/", AdminCompanyListView.as_view()),
     path("jobs/", AdminJobListView.as_view()),
     path("jobs/<int:pk>/toggle/", AdminJobToggleView.as_view()),
+    path("applications/", AdminApplicationListView.as_view()),
 ]

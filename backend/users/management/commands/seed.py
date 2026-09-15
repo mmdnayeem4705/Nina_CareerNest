@@ -2,6 +2,8 @@ from django.core.management.base import BaseCommand
 
 from applications.models import Application
 from companies.models import Company
+from jobs.full_time_jobs import FULL_TIME_JOBS
+from jobs.internships import INTERNSHIPS
 from jobs.models import Job
 from notifications.models import Notification
 from resumes.matching import score_candidate
@@ -65,6 +67,7 @@ class Command(BaseCommand):
         )
 
         company, _ = Company.objects.get_or_create(
+            name="LumenForge",
             owner=recruiter,
             defaults={
                 "name": "LumenForge",
@@ -81,43 +84,32 @@ class Command(BaseCommand):
         company.location = "Singapore"
         company.save()
 
-        jobs_spec = [
-            {
-                "title": "Python Developer",
-                "location": "Singapore / Remote",
-                "job_type": Job.JobType.FULL_TIME,
-                "salary_min": 90000,
-                "salary_max": 130000,
-                "required_skills": ["Python", "Django", "PostgreSQL", "Docker"],
-                "description": "Own backend services for our hiring marketplace. You will design APIs, shape data models, and work closely with product.",
-                "requirements": "3+ years Python. Strong Django REST experience. Comfortable with PostgreSQL and Docker.",
-            },
-            {
-                "title": "QA Automation Engineer",
-                "location": "Bengaluru",
-                "job_type": Job.JobType.FULL_TIME,
-                "salary_min": 70000,
-                "salary_max": 100000,
-                "required_skills": ["Python", "Selenium", "Pytest", "Playwright"],
-                "description": "Build a durable automation layer across web flows for candidates, recruiters, and admins.",
-                "requirements": "Hands-on Selenium or Playwright. Pytest fixtures and reporting. CI familiarity is a plus.",
-            },
-            {
-                "title": "Full-Stack Engineer",
-                "location": "Remote",
-                "job_type": Job.JobType.REMOTE,
-                "salary_min": 100000,
-                "salary_max": 145000,
-                "required_skills": ["Python", "Django", "React", "PostgreSQL"],
-                "description": "Ship candidate and recruiter experiences end to end, from REST contracts to polished UI.",
-                "requirements": "Django + React. Care about UX details. Experience with JWT auth is helpful.",
-            },
+        jobs_spec = FULL_TIME_JOBS + INTERNSHIPS
+
+        legacy_demo_titles = [
+            "Python Developer",
+            "QA Automation Engineer",
+            "Full-Stack Engineer",
+            "Software Engineering Intern",
+            "Data Analyst Intern",
+            "Frontend Developer Intern",
         ]
+        Job.objects.filter(company=company, title__in=legacy_demo_titles).delete()
 
         created_jobs = []
+        company_cache = {company.name: company}
         for spec in jobs_spec:
-            job, _ = Job.objects.get_or_create(company=company, title=spec["title"], defaults={**spec, "posted_by": recruiter})
-            for key, value in spec.items():
+            job_company = company_cache.get(spec["company"])
+            if not job_company:
+                job_company, _ = Company.objects.get_or_create(
+                    name=spec["company"],
+                    owner=recruiter,
+                    defaults={"industry": "Technology", "location": spec["location"]},
+                )
+                company_cache[spec["company"]] = job_company
+            job_data = {key: value for key, value in spec.items() if key != "company"}
+            job, _ = Job.objects.get_or_create(company=job_company, title=spec["title"], defaults={**job_data, "posted_by": recruiter})
+            for key, value in job_data.items():
                 setattr(job, key, value)
             job.posted_by = recruiter
             job.is_active = True
@@ -141,6 +133,19 @@ class Command(BaseCommand):
             app.matched_skills = result["matched"]
             app.missing_skills = result["missing"]
             app.save()
+
+        for job in created_jobs[1:]:
+            result = score_candidate(job.required_skills, profile.skills)
+            Application.objects.update_or_create(
+                job=job,
+                candidate=candidate,
+                defaults={
+                    "cover_letter": f"I am interested in the {job.title} opportunity and would love to contribute while learning from the team.",
+                    "match_score": result["score"],
+                    "matched_skills": result["matched"],
+                    "missing_skills": result["missing"],
+                },
+            )
 
         Notification.objects.get_or_create(
             user=candidate,

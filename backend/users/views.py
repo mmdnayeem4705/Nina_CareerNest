@@ -1,4 +1,5 @@
 from rest_framework import generics, permissions, status
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -32,6 +33,18 @@ class MeView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class AvatarUploadView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request):
+        avatar = request.FILES.get("avatar")
+        if not avatar:
+            return Response({"detail": "Choose an image first."}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.avatar = avatar
+        request.user.save(update_fields=["avatar"])
+        return Response(UserSerializer(request.user, context={"request": request}).data)
 
 
 class CandidateProfileView(APIView):

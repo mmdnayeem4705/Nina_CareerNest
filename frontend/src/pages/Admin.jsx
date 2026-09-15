@@ -146,3 +146,63 @@ export function AdminJobs() {
     </div>
   );
 }
+
+export function AdminApplications() {
+  const [applications, setApplications] = useState([]);
+  const [error, setError] = useState("");
+
+  async function load() {
+    try {
+      setApplications(await api.get("/api/admin/applications/"));
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  async function setStatus(id, status) {
+    try {
+      const updated = await api.patch(`/api/applications/${id}/status/`, { status });
+      setApplications((items) => items.map((item) => (item.id === id ? updated : item)));
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  return (
+    <div>
+      <div className="kicker">Hiring desk</div>
+      <h1>Review applications</h1>
+      <p className="muted">Accept, reject, or move each job seeker through your hiring process.</p>
+      {error && <p className="error">{error}</p>}
+      {applications.length === 0 && <p className="muted">No applications yet.</p>}
+      <div className="cards">
+        {applications.map((application) => (
+          <article className="card" key={application.id}>
+            <div className="row" style={{ justifyContent: "space-between" }}>
+              <div>
+                <div className="muted">{application.job.company?.name}</div>
+                <h3>{application.job.title}</h3>
+              </div>
+              <span className="badge">{application.status}</span>
+            </div>
+            <p>
+              <strong>{application.candidate.first_name} {application.candidate.last_name}</strong>
+              <br />
+              <span className="muted">{application.candidate.email}</span>
+            </p>
+            <p className="muted">{application.candidate_years || 0} years experience · {application.match_score}% match</p>
+            <p>{application.cover_letter || "No cover letter provided."}</p>
+            <div className="row">
+              <button className="btn forest" onClick={() => setStatus(application.id, "shortlisted")}>Accept</button>
+              <button className="btn ghost" onClick={() => setStatus(application.id, "rejected")}>Reject</button>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}

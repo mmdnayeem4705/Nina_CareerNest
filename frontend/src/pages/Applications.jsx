@@ -2,6 +2,15 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
 
+const STATUS_LABELS = {
+  applied: "Applied",
+  reviewing: "In review",
+  shortlisted: "Accepted",
+  interview: "Interview scheduled",
+  rejected: "Rejected",
+  hired: "Hired",
+};
+
 export default function Applications() {
   const [items, setItems] = useState([]);
   useEffect(() => {
@@ -19,8 +28,9 @@ export default function Applications() {
               <h3>{app.job.title}</h3>
             </Link>
             <p className="muted">{app.job.company?.name}</p>
-            <span className="badge">{app.status}</span>
+            <span className="badge">{STATUS_LABELS[app.status] || app.status}</span>
             <div className="stat">{app.match_score}%</div>
+            <p className="muted">Last updated {new Date(app.updated_at).toLocaleString()}</p>
             {app.interviews?.length > 0 && (
               <p>Interview: {new Date(app.interviews[0].scheduled_at).toLocaleString()}</p>
             )}

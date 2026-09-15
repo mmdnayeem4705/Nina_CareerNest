@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
 
-export default function Jobs() {
+export default function Jobs({ initialJobType = "full_time", title = "Find work that fits the stack you already have.", description = "Explore current opportunities at NINA and find a role where your work can make a visible difference." }) {
   const [q, setQ] = useState("");
   const [location, setLocation] = useState("");
-  const [jobType, setJobType] = useState("");
+  const [jobType, setJobType] = useState(initialJobType);
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState("");
 
@@ -15,7 +15,7 @@ export default function Jobs() {
     const params = new URLSearchParams();
     if (q) params.set("q", q);
     if (location) params.set("location", location);
-    if (jobType) params.set("job_type", jobType);
+    params.set("job_type", initialJobType || jobType);
     try {
       const data = await api.get(`/api/jobs/?${params.toString()}`);
       setJobs(data.results || data);
@@ -26,22 +26,29 @@ export default function Jobs() {
 
   useEffect(() => {
     load();
-  }, []);
+    const refresh = window.setInterval(() => load(), 30000);
+    return () => window.clearInterval(refresh);
+  }, [initialJobType]);
 
   return (
-    <div className="wrap">
-      <div className="kicker">Open roles</div>
-      <h1>Find work that fits the stack you already have.</h1>
+    <div className="wrap careers-page">
+      <div className="page-heading">
+        <div>
+          <div className="kicker">NINA careers</div>
+          <h1>{title}</h1>
+          <p className="lede">{description}</p>
+        </div>
+        <div className="live-status"><span className="live-dot" /> Live openings</div>
+      </div>
       <form className="row" onSubmit={load} style={{ margin: "16px 0 24px" }}>
         <input placeholder="Search title, company, skill" value={q} onChange={(e) => setQ(e.target.value)} />
         <input placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} />
-        <select value={jobType} onChange={(e) => setJobType(e.target.value)}>
-          <option value="">All types</option>
-          <option value="full_time">Full-time</option>
-          <option value="part_time">Part-time</option>
-          <option value="contract">Contract</option>
-          <option value="internship">Internship</option>
-          <option value="remote">Remote</option>
+        <select value={initialJobType || jobType} onChange={(e) => setJobType(e.target.value)} disabled={Boolean(initialJobType)}>
+          {initialJobType === "internship" ? (
+            <option value="internship">Internship</option>
+          ) : (
+            <option value="full_time">Full-time</option>
+          )}
         </select>
         <button className="btn" type="submit">
           Filter

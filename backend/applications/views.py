@@ -7,7 +7,7 @@ from jobs.models import Job
 from notifications.models import Notification
 from resumes.matching import score_candidate
 from users.models import CandidateProfile
-from users.permissions import IsCandidate, IsRecruiter
+from users.permissions import IsCandidate, IsRecruiter, IsStaffRole
 
 from .models import Application, Interview
 from .serializers import ApplicationSerializer, InterviewSerializer
@@ -66,11 +66,14 @@ class MyApplicationsView(generics.ListAPIView):
 
 
 class RecruiterApplicantsView(APIView):
-    permission_classes = [IsRecruiter]
+    permission_classes = [IsStaffRole]
 
     def get(self, request, pk):
+        job_filters = {"pk": pk}
+        if request.user.role == "recruiter":
+            job_filters["posted_by"] = request.user
         try:
-            job = Job.objects.get(pk=pk, posted_by=request.user)
+            job = Job.objects.get(**job_filters)
         except Job.DoesNotExist:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         qs = Application.objects.filter(job=job).select_related("candidate", "job", "job__company").prefetch_related("interviews")
@@ -94,12 +97,14 @@ class RecruiterApplicantsView(APIView):
 
 
 class ApplicationStatusView(APIView):
-    permission_classes = [IsRecruiter]
+    permission_classes = [IsStaffRole]
 
     def patch(self, request, pk):
         try:
-            application = Application.objects.select_related("job", "candidate").get(pk=pk, job__posted_by=request.user)
+            application = Application.objects.select_related("job", "candidate").get(pk=pk)
         except Application.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        if request.user.role == "recruiter" and application.job.posted_by_id != request.user.id:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         new_status = request.data.get("status")
         if new_status not in Application.Status.values:

@@ -54,12 +54,16 @@ class RecruiterJobListCreateView(APIView):
     permission_classes = [IsRecruiter]
 
     def get(self, request):
-        company, _ = Company.objects.get_or_create(owner=request.user, defaults={"name": "My Company"})
+        company = Company.objects.filter(owner=request.user).order_by("id").first()
+        if not company:
+            company = Company.objects.create(owner=request.user, name="My Company")
         jobs = Job.objects.filter(company=company).annotate(applicant_count=Count("applications"))
         return Response(JobSerializer(jobs, many=True, context={"request": request}).data)
 
     def post(self, request):
-        company, _ = Company.objects.get_or_create(owner=request.user, defaults={"name": "My Company"})
+        company = Company.objects.filter(owner=request.user).order_by("id").first()
+        if not company:
+            company = Company.objects.create(owner=request.user, name="My Company")
         serializer = JobWriteSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         job = serializer.save(company=company, posted_by=request.user)

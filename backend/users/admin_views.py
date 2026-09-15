@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from applications.models import Application
+from applications.serializers import ApplicationSerializer
 from companies.models import Company
 from companies.serializers import CompanySerializer
 from jobs.models import Job
@@ -108,3 +109,16 @@ class AdminJobToggleView(APIView):
         job.is_active = not job.is_active
         job.save(update_fields=["is_active"])
         return Response(JobSerializer(job).data)
+
+
+class AdminApplicationListView(generics.ListAPIView):
+    permission_classes = [IsAdminRole]
+    serializer_class = ApplicationSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        return (
+            Application.objects.select_related("job", "job__company", "candidate")
+            .prefetch_related("interviews")
+            .order_by("status", "-created_at")
+        )

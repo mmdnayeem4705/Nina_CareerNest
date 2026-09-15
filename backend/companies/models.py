@@ -9,8 +9,8 @@ class Company(models.Model):
     industry = models.CharField(max_length=120, blank=True)
     location = models.CharField(max_length=160, blank=True)
     logo = models.ImageField(upload_to="company_logos/", blank=True, null=True)
-    owner = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="company"
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="companies"
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
