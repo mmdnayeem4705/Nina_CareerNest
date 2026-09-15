@@ -1,109 +1,146 @@
-# NINA Organization — Job Portal
+NINA Organization — Job Portal 🚀
 
-Recruitment product with a React frontend and Django REST backend. Candidates build profiles, upload resumes, and apply. Recruiters post jobs, rank applicants by skill match, and schedule interviews. Admins oversee users, companies, and hiring stats.
+A full-stack recruitment and job portal built with React and Django REST
+Framework.
 
+✨ FEATURES
 
+👤 Candidate - Register and log in using JWT authentication - Create and
+update profile - Upload resumes - Search jobs and internships - Apply
+for jobs - Track applications - View skill-match information
 
-# If you want to run it again later
-Open PowerShell and run:
-$env:Path += ";C:\Program Files\PostgreSQL\17\bin"
+🏢 Recruiter - Create and manage job postings - View applicants - Check
+skill-match scores - Manage applications - Schedule interviews
 
-(Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& c:\Users\SINGAPORE\OneDrive\Desktop\Nina_organization\.venv\Scripts\Activate.ps1)
-cd backend
-python manage.py runserver 0.0.0.0:8000
+🛠️ Admin - Manage users and companies - Manage jobs and applications -
+View hiring information
 
+🧰 TECHNOLOGY STACK
 
-Then in another terminal:
-cd "C:\Users\SINGAPORE\OneDrive\Desktop\Nina_organization\frontend"
-npm run dev -- --host 0.0.0.0
+Frontend: - React.js - Vite - HTML, CSS, JavaScript
 
+Backend: - Python - Django - Django REST Framework - JWT Authentication
 
-What to do next
-1) Open the app
-Use:
+Database: - PostgreSQL
 
-Frontend: http://localhost:5174/
-Backend API: http://localhost:8000/api/jobs/
-2) Log in with demo accounts
-Admin: admin@nina.org / Admin1234!
-Recruiter: recruiter@nina.org / Recruiter1234!
-Candidate: candidate@nina.org / Candidate1234!
+Other: - Resume parsing for PDF, DOCX and TXT - REST APIs - Docker
+support - Git and GitHub - Render deployment
 
+📁 PROJECT STRUCTURE
 
+Nina_CareerNest/ ├── backend/ # Django REST API ├── frontend/ # React +
+Vite application ├── docker-compose.yml ├── .env.example └── README.txt
 
-# Stack
+▶️ RUN LOCALLY
 
-- Frontend: React (Vite)
-- Backend: Python, Django REST Framework, JWT
-- Database: PostgreSQL 17 for local development
-- Resume parse: PDF / DOCX / TXT skill extraction and match score
+Requirements: - Python 3.13 - Node.js - PostgreSQL - Git
 
-Testing is intentionally not included yet.
+Backend:
 
-## Local run (recommended)
+    cd C:\Users\SINGAPORE\Nina_organization
+    .\.venv\Scripts\Activate.ps1
+    cd backend
+    pip install -r requirements.txt
+    python manage.py migrate
+    python manage.py seed
+    python manage.py runserver
 
-You need Python 3.13 (`py` on Windows), Node.js, and Git.
+Backend: http://localhost:8000
 
-```powershell
-cd C:\Users\SINGAPORE\Nina_organization
-.\.venv\Scripts\Activate.ps1
-pip install -r backend\requirements.txt
-cd backend
-python manage.py migrate
-python manage.py seed
-python manage.py runserver
-```
+Frontend (open another terminal):
 
-In a second terminal:
+    cd C:\Users\SINGAPORE\Nina_organization\frontend
+    npm install
+    npm run dev
 
-```powershell
-cd C:\Users\SINGAPORE\Nina_organization\frontend
-npm install
-npm run dev
-```
+Frontend: http://localhost:5173
 
-Open http://localhost:5173
+🔗 API ENDPOINTS
 
-Vite proxies `/api` and `/media` to Django on port 8000.
+Authentication: - POST /api/auth/register/ - POST /api/auth/login/ -
+GET/PATCH /api/auth/me/ - GET/PATCH /api/auth/profile/
 
-## Demo accounts
+Jobs: - GET /api/jobs/ - /api/jobs/mine/
 
-| Role | Email | Password |
-| --- | --- | --- |
-| Candidate | candidate@nina.org | Candidate1234! |
-| Recruiter | recruiter@nina.org | Recruiter1234! |
-| Admin | admin@nina.org | Admin1234! |
+Applications: - POST /api/applications/jobs//apply/ - /api/applications/
 
-The seeded Python Developer application should show a **75%** match (Python, Django, PostgreSQL present; Docker missing).
+Resumes: - POST /api/resumes/
 
-## PostgreSQL with Docker
+Admin: - /api/admin/
 
-```powershell
-docker compose up --build
-```
+🗄️ DATABASE
 
-Set `DATABASE_URL=postgres://nina:nina@localhost:5432/nina` if you run Django on the host against the Compose database.
+The application uses PostgreSQL.
 
-## View the database
+When DATABASE_URL is configured, Django connects to the PostgreSQL
+database specified by that variable.
 
-By default, local development uses SQLite at `backend/db.sqlite3`. You can inspect it with **DB Browser for SQLite** by opening that file, or query it from the backend shell:
+🔐 DEMO ACCOUNTS
 
-```powershell
-cd backend
-..\.venv\Scripts\python.exe manage.py dbshell
-```
+The seed command creates demo accounts for development:
 
-For a visual view of users, companies, jobs, and applications, open `http://localhost:8000/admin/` after creating a superuser with `python manage.py createsuperuser`.
+Candidate: candidate@nina.org
 
-When `DATABASE_URL` is set to PostgreSQL, the live database is PostgreSQL instead of `backend/db.sqlite3`. Use a PostgreSQL client such as pgAdmin or the `psql` command with the connection details from `DATABASE_URL`.
+Recruiter: recruiter@nina.org
 
-## API sketch
+Admin: admin@nina.org
 
-- `POST /api/auth/register/`
-- `POST /api/auth/login/` (body: `{ "email": "candidate@nina.org", "password": "..." }`)
-- `GET/PATCH /api/auth/me/`
-- `GET/PATCH /api/auth/profile/`
-- `GET /api/jobs/`
-- `POST /api/applications/jobs/:id/apply/`
-- `POST /api/resumes/` (multipart file)
-- Recruiter and admin routes under `/api/jobs/mine/`, `/api/applications/`, `/api/admin/`
+⚠️ Do not use demo passwords for a real production environment. Change
+or remove demo accounts before using the application with real users.
+
+🌐 DEPLOYMENT
+
+The project is deployed on Render.
+
+Frontend: https://nina-careernest-frontend.onrender.com
+
+Backend: https://nina-careernest-backend.onrender.com
+
+Architecture:
+
+    React Frontend
+          |
+          | REST API
+          v
+    Django REST Backend
+          |
+          v
+    PostgreSQL Database
+
+Frontend API configuration: VITE_API_URL
+
+Backend CORS configuration: CORS_ALLOWED_ORIGINS
+
+🔄 UPDATE THE DEPLOYED PROJECT
+
+After making code changes:
+
+    git add .
+    git commit -m "Update project"
+    git push origin main
+
+Render can automatically deploy the latest changes from the main branch.
+
+You do NOT need to create a new Render service every time you update
+your code.
+
+📄 RESUME PARSING
+
+Candidates can upload: - PDF - DOCX - TXT
+
+The backend extracts skills from resumes and can calculate a job
+skill-match score.
+
+🧪 TESTING
+
+Automated testing is not included yet.
+
+Future improvements: - Unit testing - API testing - Frontend testing -
+End-to-end testing - CI/CD automation
+
+👨‍💻 PROJECT
+
+NINA Organization — Job Portal
+
+A full-stack recruitment platform built with React, Django REST
+Framework, JWT authentication, and PostgreSQL.
